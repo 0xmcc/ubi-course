@@ -89,6 +89,7 @@
      * - Shows feedback to user
      * - Opens Stripe Checkout (or fallback redirects)
      */
+    
     async function reserveSpot(event) {
         if (event) {
             event.preventDefault();
@@ -151,14 +152,15 @@
             showReserveFeedback('We saved your email locally in case the network hiccups.');
         }
 
-        alert('Thank you! We will now take you to the payment page.');
+        // alert('Thank you! We will now take you to the payment page.');
+
 
         // Replace with production Stripe Checkout link
         const checkoutUrl = 'https://buy.stripe.com/fZuaEW35dctq4PsghgafS01';
-        const checkoutWindow = window.open(checkoutUrl, '_blank', 'noopener');
-        if (!checkoutWindow) {
-            window.location.href = checkoutUrl;
-        }
+         window.open(checkoutUrl, '_blank', 'noopener');
+        // if (!checkoutWindow || checkoutWindow.closed || typeof checkoutWindow.closed === 'undefined') {
+        //     window.location.href = checkoutUrl;
+        // }
     }
 
     function focusReserve() {
@@ -174,12 +176,6 @@
         }, 400);
     }
 
-    /**
-     * Populates the hero and CTA email input fields with the 
-     * email value previously saved in localStorage (if any and if input is empty).
-     * This makes it easier for users who return to the page or reload,
-     * so they don't have to retype their email address.
-     */
     function hydrateEmailFromStorage() {
         try {
             const stored = localStorage.getItem('vibecoding_pending_email');
