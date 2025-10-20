@@ -31,15 +31,15 @@
 
     // Share functionality
     function shareToSlack() {
-        const text = "Found this amazing AI workshop for design teams. They show you how to turn Figma mocks into React apps with no coding! 🚀";
+        const text = "Cursor & Beyond: 3-session sprint to take your AI prototype live, collect feedback, and keep shipping. $500 SF cohort starts Nov 1. 🚀";
         const url = window.location.href;
         // In production, this would integrate with Slack API
         alert('Slack share: ' + text + '\n' + url);
     }
 
     function shareViaEmail() {
-        const subject = "You need to see this AI workshop";
-        const body = "Hey! I found this workshop that teaches design teams how to use AI tools like Cursor and Claude Code. Teams are shipping 2x faster after taking it. Check it out: " + window.location.href;
+        const subject = "Cursor & Beyond — take your AI prototype live";
+        const body = "Hey! Cursor & Beyond is a 3-session sprint to move what you built with AI into production, deploy to your own domain, and add real features. Cohort 1 (SF) starts Nov 1. Check it out: " + window.location.href;
         window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     }
 
@@ -59,7 +59,7 @@
     function updateSocialTicker() {
         const items = document.querySelectorAll('.social-item');
         // In production, this would fetch real data
-        const workshopDates = ['Nov 3'];
+        const workshopDates = ['Nov 1'];
         const nextDate = workshopDates[Math.floor(Math.random() * workshopDates.length)];
         if (items[1]) {
             items[1].innerHTML = `⚡ Next workshop: ${nextDate}`;
@@ -87,7 +87,7 @@
         });
         
         // Redirect to booking
-        window.location.href = 'mailto:markocalvocruz@gmail.com,theterrytucker@gmail.com?subject=Q4 UBI Workshop Enrollment - [Your Company Name]&body=Hi! We\'d like to enroll our team in the Q4 UBI Workshop.%0A%0ATeam size: [X] people%0APreferred date: [October 15 / November 12 / December 3]%0AFormat preference: [In-person SF Bay Area / Virtual]%0A%0APlease send us the enrollment details and next steps.%0A%0AThanks!';
+        window.location.href = 'mailto:markocalvocruz@gmail.com,theterrytucker@gmail.com?subject=Cursor%20%26%20Beyond%20Enrollment&body=Hi!%20I%E2%80%99d%20like%20to%20join%20the%20Cursor%20%26%20Beyond%20cohort%20starting%20November%201.%0A%0AName:%20[Your%20Name]%0AProject:%20[What%20you%E2%80%99ve%20built%20so%20far]%0AWhat%20I%20want%20to%20ship%20next:%20[Features%20or%20goals]%0A%0AThanks!';
     }
 
     function showTeamDiscount() {
@@ -146,7 +146,7 @@
         const seatsElement = document.querySelector('.seats-left');
         if (seatsElement) {
             // Keep it static and professional
-            seatsElement.textContent = 'Limited to 12 participants';
+            seatsElement.textContent = 'Capped at 8 builders';
         }
     }
 
