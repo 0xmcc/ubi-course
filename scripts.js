@@ -78,67 +78,116 @@
         }, 3600000); // Update every hour
     }
 
-    // Enrollment and conversion functions
-    function enrollNow() {
-        // Track conversion event
-        gtag && gtag('event', 'enrollment_click', {
-            'event_category': 'conversion',
-            'event_label': 'enroll_button_click'
-        });
-        
-        // Redirect to booking
-        window.location.href = 'mailto:markocalvocruz@gmail.com,theterrytucker@gmail.com?subject=Cursor%20%26%20Beyond%20Enrollment&body=Hi!%20I%E2%80%99d%20like%20to%20join%20the%20Cursor%20%26%20Beyond%20cohort%20starting%20November%201.%0A%0AName:%20[Your%20Name]%0AProject:%20[What%20you%E2%80%99ve%20built%20so%20far]%0AWhat%20I%20want%20to%20ship%20next:%20[Features%20or%20goals]%0A%0AThanks!';
-    }
+    // Reserve flow
+    /**
+     * Handles the Reserve Spot flow:
+     * - Prevents default form submit
+     * - Validates email from hero or CTA inputs
+     * - Gives inline feedback on input errors
+     * - Saves valid email to localStorage
+     * - Fires tracking event via gtag if available
+     * - Shows feedback to user
+     * - Opens Stripe Checkout (or fallback redirects)
+     */
+    function reserveSpot(event) {
+        if (event) {
+            event.preventDefault();
+        }
 
-    function showTeamDiscount() {
-        alert('Group Pricing Available\n\nTeams of 8 or more participants qualify for volume pricing.\n\nContact us at markocalvocruz@gmail.com with your team size for a customized quote.\n\nEducation budget-friendly options available.');
-    }
+        const form = event?.target;
+        const heroInput = document.querySelector('.hero-input');
+        const ctaInput = document.querySelector('.cta-input');
+        const sourceInput = form ? form.querySelector('input[type="email"]') : heroInput || ctaInput;
+        const email = sourceInput ? sourceInput.value.trim() : '';
 
-    function subscribeEmail() {
-        const emailInput = document.querySelector('.email-input');
-        const submitBtn = document.querySelector('.email-submit');
-        const email = emailInput.value.trim();
-        
         if (!email || !email.includes('@')) {
-            emailInput.style.borderColor = '#EF4444';
-            emailInput.focus();
+            if (sourceInput) {
+                sourceInput.classList.add('input-error');
+                sourceInput.focus();
+            }
             return;
         }
-        
-        // Reset border color
-        emailInput.style.borderColor = 'var(--gray-300)';
-        
-        // Update button state
-        const originalText = submitBtn.textContent;
-        submitBtn.textContent = 'Subscribing...';
-        submitBtn.disabled = true;
-        
-        // Simulate API call (replace with actual implementation)
-        setTimeout(() => {
-            submitBtn.textContent = '✓ Subscribed!';
-            submitBtn.style.background = '#10B981';
-            emailInput.value = '';
-            
-            // Track subscription
-            gtag && gtag('event', 'email_subscribe', {
-                'event_category': 'lead_generation',
-                'event_label': 'newsletter_signup'
+
+        [heroInput, ctaInput].forEach(input => {
+            if (input) {
+                input.classList.remove('input-error');
+                if (!input.value) {
+                    input.value = email;
+                }
+            }
+        });
+
+        try {
+            localStorage.setItem('vibecoding_pending_email', email);
+        } catch (err) {
+            console.warn('Email persistence skipped:', err);
+        }
+
+        if (typeof gtag === 'function') {
+            gtag('event', 'reserve_spot', {
+                'event_category': 'conversion',
+                'event_label': 'primary_checkout_click'
             });
-            
-            // Reset after 3 seconds
-            setTimeout(() => {
-                submitBtn.textContent = originalText;
-                submitBtn.style.background = 'var(--secondary)';
-                submitBtn.disabled = false;
-            }, 3000);
-        }, 1000);
-        
-        // In production, send to your email service:
-        // fetch('/api/subscribe', {
-        //     method: 'POST',
-        //     headers: {'Content-Type': 'application/json'},
-        //     body: JSON.stringify({email: email})
-        // });
+        }
+
+        showReserveFeedback('Checkout ready. Click OK to continue.');
+
+        alert('Thank you! We will now take you to the payment page.');
+
+        // Replace with production Stripe Checkout link
+        const checkoutUrl = 'https://buy.stripe.com/fZuaEW35dctq4PsghgafS01';
+        const checkoutWindow = window.open(checkoutUrl, '_blank', 'noopener');
+        if (!checkoutWindow) {
+            window.location.href = checkoutUrl;
+        }
+    }
+
+    function focusReserve() {
+        const heroSection = document.querySelector('.hero');
+        const heroInput = document.querySelector('.hero-input');
+        if (heroSection) {
+            heroSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        setTimeout(() => {
+            if (heroInput) {
+                heroInput.focus();
+            }
+        }, 400);
+    }
+
+    /**
+     * Populates the hero and CTA email input fields with the 
+     * email value previously saved in localStorage (if any and if input is empty).
+     * This makes it easier for users who return to the page or reload,
+     * so they don't have to retype their email address.
+     */
+    function hydrateEmailFromStorage() {
+        try {
+            const stored = localStorage.getItem('vibecoding_pending_email');
+            if (stored) {
+                const heroInput = document.querySelector('.hero-input');
+                const ctaInput = document.querySelector('.cta-input');
+                [heroInput, ctaInput].forEach(input => {
+                    if (input && !input.value) {
+                        input.value = stored;
+                    }
+                });
+            }
+        } catch (err) {
+            console.warn('Email hydration skipped:', err);
+        }
+    }
+
+    let reserveFeedbackTimer;
+    function showReserveFeedback(message) {
+        const feedback = document.getElementById('reserve-feedback');
+        if (!feedback) return;
+        feedback.textContent = message;
+        feedback.classList.add('active');
+        clearTimeout(reserveFeedbackTimer);
+        reserveFeedbackTimer = setTimeout(() => {
+            feedback.classList.remove('active');
+        }, 6000);
     }
 
     // Update capacity information
@@ -155,7 +204,18 @@
         // updateSocialTicker();
         addUrgencyCountdown();
         updateSeatsLeft();
+        hydrateEmailFromStorage();
+        attachReserveListeners();
         
         // Update seats counter every hour
         setInterval(updateSeatsLeft, 60 * 60 * 1000);
     });
+
+    function attachReserveListeners() {
+        const inputs = document.querySelectorAll('.hero-input, .cta-input');
+        inputs.forEach(input => {
+            input.addEventListener('input', () => {
+                input.classList.remove('input-error');
+            });
+        });
+    }

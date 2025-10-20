@@ -38,14 +38,15 @@
                     </div>
                     <p class="social-text">builders left with a deployed MVP and next users</p>
                 </div>
-                <div class="hero-buttons">
-                    <input type="email" class="hero-input" placeholder="Your email to get the invite" aria-label="Email address">
-                    <a href="#book" class="btn btn-primary">
-                        <span class="btn-text">Reserve my Spot 🚀</span>
-                        <!-- <span class="btn-subtext">8 seats · SF cohort starts Nov 1</span> -->
-                    </a>
-                    <!-- <a href="#experience" class="btn btn-secondary">Review the 3-session plan</a> -->
-                </div>
+                <form class="hero-buttons" onsubmit="reserveSpot(event)">
+                    <input type="email" class="hero-input" placeholder="you@company.com" aria-label="Email address">
+                    <button type="submit" class="btn btn-primary btn-flow">
+                        <span class="btn-text">Reserve my spot</span>
+                        <span class="btn-subtext">One smooth checkout — email saved automatically</span>
+                    </button>
+                </form>
+                <p class="hero-footnote">Complete checkout in seconds. If you bounce before paying, we’ll keep you in the loop — no spam, just next steps.</p>
+                <div class="reserve-feedback" id="reserve-feedback"></div>
             </div>
             <div class="abstract-visual">
                 <div class="circle"></div>
@@ -145,30 +146,11 @@
                             <!-- <li>Education budget friendly with group discounts available</li> -->
                         </ul>
                         
-                        <button class="enroll-btn" onclick="enrollNow()">
-                            Reserve my spot 🚀
+                        <button type="button" class="enroll-btn" onclick="focusReserve()">
+                            Reserve my spot
                         </button>
+                        <p class="pricing-note">One motion, one checkout. We’ll carry your email if you pause.</p>
                         
-                        <!-- <div class="secondary-actions">
-                            <a href="mailto:markocalvocruz@gmail.com,theterrytucker@gmail.com?subject=Team%20Cohort%20Inquiry%20-%20Vibecoding%20Course" class="secondary-btn">
-                                Team Cohort Inquiry
-                            </a>
-                            
-                            <a href="https://ubi-workshop.vercel.app/#" class="secondary-btn team-savings" onclick="showTeamDiscount()">
-                                Group Pricing (5+ seats)
-                            </a>
-                            
-                            <a href="https://ubi-workshop.vercel.app/#financial-aid" class="secondary-btn financial-aid-btn">
-                                Financial Aid Options
-                            </a> -->
-                        <!-- <div class="email-capture">
-                            <h4>Get notified about upcoming cohorts</h4>
-                            <p>Receive new dates, alumni build breakdowns, and invite-only build sprints for AI-curious teams.</p>
-                            <div class="email-form">
-                                <input type="email" class="email-input" placeholder="Enter your email" required="">
-                                <button type="button" class="email-submit" onclick="subscribeEmail()">Keep me posted</button>
-                            </div>
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -491,10 +473,10 @@
         <div class="container cta-inner">
             <h2>Moving forward</h2>
             <p class="cta-simple">$500 · Nov 1 cohort · In-person in San Francisco</p>
-            <div class="cta-form">
+            <form class="cta-form" onsubmit="reserveSpot(event)">
                 <input type="email" class="cta-input" placeholder="you@company.com" aria-label="Email address">
-                <a href="mailto:markocalvocruz@gmail.com,theterrytucker@gmail.com?subject=Cursor%20%26%20Beyond%20Enrollment&body=Hi!%20I%E2%80%99d%20like%20to%20join%20the%20Cursor%20%26%20Beyond%20cohort%20starting%20November%201.%0A%0AName:%20[Your%20Name]%0AProject:%20[What%20you%E2%80%99ve%20built%20so%20far]%0AWhat%20I%20want%20to%20ship%20next:%20[Features%20or%20goals]%0A%0AThanks!" class="btn btn-cta">Sign up for Cohort 1</a>
-            </div>
+                <button type="submit" class="btn btn-cta">Reserve my spot</button>
+            </form>
             <p class="cta-footnote">We’ll confirm within 24 hours. Seats capped at 8 builders.</p>
         </div>
     </section>
