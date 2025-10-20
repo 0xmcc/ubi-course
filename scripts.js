@@ -59,7 +59,7 @@
     function updateSocialTicker() {
         const items = document.querySelectorAll('.social-item');
         // In production, this would fetch real data
-        const workshopDates = ['Sept 24', 'Oct 8', 'Oct 15'];
+        const workshopDates = ['Nov 3'];
         const nextDate = workshopDates[Math.floor(Math.random() * workshopDates.length)];
         if (items[1]) {
             items[1].innerHTML = `⚡ Next workshop: ${nextDate}`;
@@ -152,7 +152,7 @@
 
     // Initialize on load
     document.addEventListener('DOMContentLoaded', () => {
-        updateSocialTicker();
+        // updateSocialTicker();
         addUrgencyCountdown();
         updateSeatsLeft();
         
