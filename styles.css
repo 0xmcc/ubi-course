@@ -153,10 +153,28 @@ section:nth-child(5) { animation-delay: 0.4s; }
 /* Align hero buttons vertically centered */
 .hero-buttons {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 1rem;
-    flex-wrap: wrap;
     margin-top: 2.5rem;
+}
+
+.hero-input {
+    width: 100%;
+    max-width: 360px;
+    padding: 0.9rem 1.25rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 10px;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.hero-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 12px 30px rgba(59, 130, 246, 0.25);
 }
 
 .btn-primary {
@@ -808,6 +826,10 @@ section:nth-child(5) { animation-delay: 0.4s; }
     color: var(--secondary);
     font-weight: 600;
     margin-right: 0.5rem;
+}
+
+.outcome-text {
+    margin-top: 2rem;
 }
 
 
