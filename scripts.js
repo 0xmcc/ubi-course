@@ -89,7 +89,7 @@
      * - Shows feedback to user
      * - Opens Stripe Checkout (or fallback redirects)
      */
-    function reserveSpot(event) {
+    async function reserveSpot(event) {
         if (event) {
             event.preventDefault();
         }
@@ -130,7 +130,26 @@
             });
         }
 
-        showReserveFeedback('Checkout ready. Click OK to continue.');
+        showReserveFeedback('Saving your spot...');
+
+        try {
+            const response = await fetch('/api/reserve', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server responded with ${response.status}`);
+            }
+
+            showReserveFeedback('Email captured. Click OK to move to payment.');
+        } catch (error) {
+            console.warn('Reservation email capture failed:', error);
+            showReserveFeedback('We saved your email locally in case the network hiccups.');
+        }
 
         alert('Thank you! We will now take you to the payment page.');
 
