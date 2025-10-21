@@ -144,14 +144,14 @@
         console.log('[ReserveSpot] Calling /api/reserve endpoint...');
 
         try {
-            const response = await fetch('/api/reserve', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email })
-            });
+            const API_BASE_URL = 'https://webhooks.shipmas.fun';
 
+            const response = await fetch(`${API_BASE_URL}/api/reserve`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email }),
+              mode: 'cors'
+            });
             console.log('[ReserveSpot] API response status:', response.status);
 
             if (!response.ok) {
