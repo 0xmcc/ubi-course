@@ -91,8 +91,11 @@
      */
     
     async function reserveSpot(event) {
+        console.log('[ReserveSpot] Function called');
+        
         if (event) {
             event.preventDefault();
+            console.log('[ReserveSpot] Event prevented');
         }
 
         const form = event?.target;
@@ -100,8 +103,11 @@
         const ctaInput = document.querySelector('.cta-input');
         const sourceInput = form ? form.querySelector('input[type="email"]') : heroInput || ctaInput;
         const email = sourceInput ? sourceInput.value.trim() : '';
+        
+        console.log('[ReserveSpot] Email extracted:', email);
 
         if (!email || !email.includes('@')) {
+            console.log('[ReserveSpot] Invalid email, showing error');
             if (sourceInput) {
                 sourceInput.classList.add('input-error');
                 sourceInput.focus();
@@ -109,6 +115,7 @@
             return;
         }
 
+        console.log('[ReserveSpot] Email valid, syncing inputs...');
         [heroInput, ctaInput].forEach(input => {
             if (input) {
                 input.classList.remove('input-error');
@@ -120,8 +127,9 @@
 
         try {
             localStorage.setItem('vibecoding_pending_email', email);
+            console.log('[ReserveSpot] Email saved to localStorage');
         } catch (err) {
-            console.warn('Email persistence skipped:', err);
+            console.warn('[ReserveSpot] Email persistence skipped:', err);
         }
 
         if (typeof gtag === 'function') {
@@ -129,9 +137,11 @@
                 'event_category': 'conversion',
                 'event_label': 'primary_checkout_click'
             });
+            console.log('[ReserveSpot] Analytics event fired');
         }
 
         showReserveFeedback('Saving your spot...');
+        console.log('[ReserveSpot] Calling /api/reserve endpoint...');
 
         try {
             const response = await fetch('/api/reserve', {
@@ -142,25 +152,28 @@
                 body: JSON.stringify({ email })
             });
 
+            console.log('[ReserveSpot] API response status:', response.status);
+
             if (!response.ok) {
+                const errorText = await response.text();
+                console.error('[ReserveSpot] API error response:', errorText);
                 throw new Error(`Server responded with ${response.status}`);
             }
 
+            const data = await response.json();
+            console.log('[ReserveSpot] API success:', data);
+            
             showReserveFeedback('Email captured. Click OK to move to payment.');
         } catch (error) {
-            console.warn('Reservation email capture failed:', error);
+            console.error('[ReserveSpot] Reservation email capture failed:', error);
             showReserveFeedback('We saved your email locally in case the network hiccups.');
         }
 
-        // alert('Thank you! We will now take you to the payment page.');
-
-
         // Replace with production Stripe Checkout link
         const checkoutUrl = 'https://buy.stripe.com/fZuaEW35dctq4PsghgafS01';
-         window.open(checkoutUrl, '_blank', 'noopener');
-        // if (!checkoutWindow || checkoutWindow.closed || typeof checkoutWindow.closed === 'undefined') {
-        //     window.location.href = checkoutUrl;
-        // }
+        console.log('[ReserveSpot] Opening Stripe checkout:', checkoutUrl);
+        window.open(checkoutUrl, '_blank', 'noopener');
+        console.log('[ReserveSpot] Complete');
     }
 
     function focusReserve() {

@@ -8,19 +8,24 @@ const supabase = createClient(
 );
 
 module.exports = async (req, res) => {
+    console.log('[Reserve] Request received:', req.method);
+    
     if (req.method !== 'POST') {
         res.setHeader('Allow', 'POST');
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
     const { email } = req.body || {};
+    console.log('[Reserve] Email received:', email);
 
     if (!email || typeof email !== 'string' || !email.includes('@')) {
+        console.log('[Reserve] Invalid email provided');
         return res.status(400).json({ error: 'Valid email required' });
     }
 
     try {
         // 1) Get next available cohort
+        console.log('[Reserve] Fetching next available cohort...');
         const { data: cohort, error: cohortError } = await supabase
             .from('cohorts')
             .select('id, date, capacity, enrolled')
@@ -32,11 +37,14 @@ module.exports = async (req, res) => {
             .single();
 
         if (cohortError || !cohort) {
-            console.error('No available cohorts:', cohortError);
+            console.error('[Reserve] No available cohorts:', cohortError);
             return res.status(400).json({ error: 'No cohorts available. Check back soon!' });
         }
 
+        console.log('[Reserve] Found cohort:', { id: cohort.id, date: cohort.date, enrolled: cohort.enrolled });
+
         // 2) Save to Supabase leads table
+        console.log('[Reserve] Saving to leads table...');
         const { data: leadData, error: dbError } = await supabase
             .from('leads')
             .insert([{
@@ -50,11 +58,14 @@ module.exports = async (req, res) => {
             .select();
 
         if (dbError) {
-            console.error('Supabase error:', dbError);
+            console.error('[Reserve] Supabase leads insert error:', dbError);
             // Continue with email notifications even if DB fails
+        } else {
+            console.log('[Reserve] Lead saved successfully:', leadData?.[0]?.id);
         }
 
         // 3) Increment enrolled count (optimistic)
+        console.log('[Reserve] Incrementing enrolled count...');
         await supabase
             .from('cohorts')
             .update({ enrolled: cohort.enrolled + 1 })
@@ -66,8 +77,10 @@ module.exports = async (req, res) => {
             day: 'numeric',
             year: 'numeric'
         });
+        console.log('[Reserve] Cohort date formatted:', cohortDateFormatted);
 
         // 4) Notify your team
+        console.log('[Reserve] Sending team notification email...');
         await resend.emails.send({
             from: process.env.RESEND_FROM_EMAIL || 'notifications@yourdomain.com',
             to: process.env.RESEND_NOTIFICATION_EMAIL || 'team@yourdomain.com',
@@ -77,7 +90,10 @@ module.exports = async (req, res) => {
 <p>They may have completed checkout already. Keep them in the loop.</p>`
         });
 
+        console.log('[Reserve] Team notification sent');
+
         // 5) Send welcome/confirmation to the user
+        console.log('[Reserve] Sending user confirmation email...');
         await resend.emails.send({
             from: process.env.RESEND_FROM_EMAIL || 'notifications@yourdomain.com',
             to: email,
@@ -91,9 +107,13 @@ module.exports = async (req, res) => {
 </div>`
         });
 
+        console.log('[Reserve] User confirmation sent');
+        console.log('[Reserve] Reservation complete for:', email);
+        
         return res.status(200).json({ ok: true });
     } catch (error) {
-        console.error('Resend error:', error);
-        return res.status(500).json({ error: 'Failed to notify via email.' });
+        console.error('[Reserve] Error occurred:', error.message);
+        console.error('[Reserve] Full error:', error);
+        return res.status(500).json({ error: 'Failed to process reservation.' });
     }
 };
