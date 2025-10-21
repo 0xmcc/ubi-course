@@ -9,7 +9,13 @@ const supabase = createClient(
 
 module.exports = async (req, res) => {
     console.log('[Reserve] Request received:', req.method);
-    
+    console.log('[Reserve] Env check:', {
+        hasSupabaseUrl: !!process.env.SUPABASE_URL,
+        hasSupabaseKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+        hasResendKey: !!process.env.RESEND_API_KEY,
+        hasFromEmail: !!process.env.RESEND_FROM_EMAIL,
+        hasNotifyEmail: !!process.env.RESEND_NOTIFICATION_EMAIL
+    });
     if (req.method !== 'POST') {
         res.setHeader('Allow', 'POST');
         return res.status(405).json({ error: 'Method not allowed' });
