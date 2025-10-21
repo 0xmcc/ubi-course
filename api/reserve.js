@@ -26,12 +26,11 @@ module.exports = async (req, res) => {
     try {
         // 1) Get next available cohort
         console.log('[Reserve] Fetching next available cohort...');
+        const today = new Date().toISOString().split('T')[0];
         const { data: cohort, error: cohortError } = await supabase
             .from('cohorts')
             .select('id, date, capacity, enrolled')
-            .eq('status', 'open')
-            .lt('enrolled', supabase.raw('capacity')) // enrolled < capacity
-            .gte('date', new Date().toISOString().split('T')[0]) // future dates only
+            .gte('date', today) // only future or today
             .order('date', { ascending: true })
             .limit(1)
             .single();
