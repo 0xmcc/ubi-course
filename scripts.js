@@ -31,7 +31,7 @@
 
     // Share functionality
     function shareToSlack() {
-        const text = "Cursor & Beyond: 3-session sprint to take your AI prototype live, collect feedback, and keep shipping. $500 SF cohort starts Nov 1. 🚀";
+        const text = "Cursor & Beyond: 3-session sprint to take your AI prototype live, collect feedback, and keep shipping. $5000 SF cohort starts November 2025. 🚀";
         const url = window.location.href;
         // In production, this would integrate with Slack API
         alert('Slack share: ' + text + '\n' + url);
@@ -39,7 +39,7 @@
 
     function shareViaEmail() {
         const subject = "Cursor & Beyond — take your AI prototype live";
-        const body = "Hey! Cursor & Beyond is a 3-session sprint to move what you built with AI into production, deploy to your own domain, and add real features. Cohort 1 (SF) starts Nov 1. Check it out: " + window.location.href;
+        const body = "Hey! Cursor & Beyond is a 3-session sprint to move what you built with AI into production, deploy to your own domain, and add real features. Cohort 1 (SF) starts November 2025. Check it out: " + window.location.href;
         window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     }
 
@@ -59,7 +59,7 @@
     function updateSocialTicker() {
         const items = document.querySelectorAll('.social-item');
         // In production, this would fetch real data
-        const workshopDates = ['Nov 1'];
+        const workshopDates = ['November 2025'];
         const nextDate = workshopDates[Math.floor(Math.random() * workshopDates.length)];
         if (items[1]) {
             items[1].innerHTML = `⚡ Next workshop: ${nextDate}`;
@@ -170,7 +170,7 @@
         }
 
         // Replace with production Stripe Checkout link
-        const checkoutUrl = 'https://buy.stripe.com/fZuaEW35dctq4PsghgafS01';
+        const checkoutUrl = 'https://buy.stripe.com/4gM28qbBJ6522Hk1mmafS07';
         console.log('[ReserveSpot] Opening Stripe checkout:', checkoutUrl);
         window.open(checkoutUrl, '_blank', 'noopener');
         console.log('[ReserveSpot] Complete');
@@ -221,10 +221,10 @@
     // Update capacity information
     function updateSeatsLeft() {
         const seatsElement = document.querySelector('.seats-left');
-        if (seatsElement) {
-            // Keep it static and professional
-            seatsElement.textContent = 'Capped at 8 builders';
-        }
+        // if (seatsElement) {
+        //     // Keep it static and professional
+        //     seatsElement.textContent = 'Capped at 12 builders';
+        // }
     }
 
     // Initialize on load
