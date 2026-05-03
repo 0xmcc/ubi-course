@@ -31,15 +31,15 @@
 
     // Share functionality
     function shareToSlack() {
-        const text = "Cursor & Beyond: 3-session sprint to take your AI prototype live, collect feedback, and keep shipping. $5000 SF cohort starts November 2025. 🚀";
+        const text = "AI Co-Founder Method: 8-week program to turn your app idea into a published AI product, get first users, and keep shipping without a technical cofounder. $7500 cohort forming now. 🚀";
         const url = window.location.href;
         // In production, this would integrate with Slack API
         alert('Slack share: ' + text + '\n' + url);
     }
 
     function shareViaEmail() {
-        const subject = "Cursor & Beyond — take your AI prototype live";
-        const body = "Hey! Cursor & Beyond is a 3-session sprint to move what you built with AI into production, deploy to your own domain, and add real features. Cohort 1 (SF) starts November 2025. Check it out: " + window.location.href;
+        const subject = "AI Co-Founder Method — take your app idea live";
+        const body = "Hey! AI Co-Founder Method is an 8-week program to turn your app idea into a published AI product, get first users, and learn the workflow to keep shipping without a technical cofounder. Check it out: " + window.location.href;
         window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     }
 
@@ -57,12 +57,12 @@
 
     // Update social ticker with live data (mock for now)
     function updateSocialTicker() {
-        const items = document.querySelectorAll('.social-item');
+        const nextCohortElement = document.querySelector('.social-item2');
         // In production, this would fetch real data
-        const workshopDates = ['November 2025'];
-        const nextDate = workshopDates[Math.floor(Math.random() * workshopDates.length)];
-        if (items[1]) {
-            items[1].innerHTML = `⚡ Next workshop: ${nextDate}`;
+        const cohortStatuses = ['forming now'];
+        const nextStatus = cohortStatuses[Math.floor(Math.random() * cohortStatuses.length)];
+        if (nextCohortElement) {
+            nextCohortElement.innerHTML = `⚡ Next 8-week cohort ${nextStatus}`;
         }
     }
 
