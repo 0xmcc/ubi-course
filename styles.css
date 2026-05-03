@@ -474,9 +474,9 @@ section:nth-child(5) { animation-delay: 0.4s; }
 }
 
 .price-current {
-    font-size: 2.75rem;
+    font-size: clamp(1.6rem, 3vw, 2.25rem);
     font-weight: 800;
-    line-height: 1;
+    line-height: 1.1;
     background: linear-gradient(135deg, rgba(249, 115, 22, 0.95) 0%, rgba(107, 70, 193, 0.95) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;

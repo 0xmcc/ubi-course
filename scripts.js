@@ -31,7 +31,7 @@
 
     // Share functionality
     function shareToSlack() {
-        const text = "AI Co-Founder Method: 8-week program to turn your app idea into a published AI product, get first users, and keep shipping without a technical cofounder. $7500 cohort forming now. 🚀";
+        const text = "AI Co-Founder Method: 8-week program to help non-engineers build real apps with AI, get unstuck when things break, and keep shipping without waiting on an engineer. 🚀";
         const url = window.location.href;
         // In production, this would integrate with Slack API
         alert('Slack share: ' + text + '\n' + url);
@@ -39,7 +39,7 @@
 
     function shareViaEmail() {
         const subject = "AI Co-Founder Method — take your app idea live";
-        const body = "Hey! AI Co-Founder Method is an 8-week program to turn your app idea into a published AI product, get first users, and learn the workflow to keep shipping without a technical cofounder. Check it out: " + window.location.href;
+        const body = "Hey! AI Co-Founder Method is an 8-week program to help non-engineers build real apps with AI, get unstuck when things break, and keep shipping without waiting on an engineer. Check it out: " + window.location.href;
         window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     }
 
@@ -57,12 +57,12 @@
 
     // Update social ticker with live data (mock for now)
     function updateSocialTicker() {
-        const nextCohortElement = document.querySelector('.social-item2');
+        const programElement = document.querySelector('.social-item2');
         // In production, this would fetch real data
-        const cohortStatuses = ['forming now'];
-        const nextStatus = cohortStatuses[Math.floor(Math.random() * cohortStatuses.length)];
-        if (nextCohortElement) {
-            nextCohortElement.innerHTML = `⚡ Next 8-week cohort ${nextStatus}`;
+        const programStatuses = ['Private 8-week program'];
+        const nextStatus = programStatuses[Math.floor(Math.random() * programStatuses.length)];
+        if (programElement) {
+            programElement.innerHTML = `⚡ ${nextStatus}`;
         }
     }
 
@@ -80,14 +80,13 @@
 
     // Reserve flow
     /**
-     * Handles the Reserve Spot flow:
+     * Handles the Schedule a Call flow:
      * - Prevents default form submit
      * - Validates email from hero or CTA inputs
      * - Gives inline feedback on input errors
      * - Saves valid email to localStorage
      * - Fires tracking event via gtag if available
      * - Shows feedback to user
-     * - Opens Stripe Checkout (or fallback redirects)
      */
     
     async function reserveSpot(event) {
@@ -135,12 +134,12 @@
         if (typeof gtag === 'function') {
             gtag('event', 'reserve_spot', {
                 'event_category': 'conversion',
-                'event_label': 'primary_checkout_click'
+                'event_label': 'schedule_call_click'
             });
             console.log('[ReserveSpot] Analytics event fired');
         }
 
-        showReserveFeedback('Saving your spot...');
+        showReserveFeedback('Saving your email...');
         console.log('[ReserveSpot] Calling /api/reserve endpoint...');
 
         try {
@@ -163,16 +162,11 @@
             const data = await response.json();
             console.log('[ReserveSpot] API success:', data);
             
-            showReserveFeedback('Email captured. Click OK to move to payment.');
+            showReserveFeedback('Got it. We’ll follow up with the scheduling link.');
         } catch (error) {
             console.error('[ReserveSpot] Reservation email capture failed:', error);
             showReserveFeedback('We saved your email locally in case the network hiccups.');
         }
-
-        // Replace with production Stripe Checkout link
-        const checkoutUrl = 'https://buy.stripe.com/4gM28qbBJ6522Hk1mmafS07';
-        console.log('[ReserveSpot] Opening Stripe checkout:', checkoutUrl);
-        window.open(checkoutUrl, '_blank', 'noopener');
         console.log('[ReserveSpot] Complete');
     }
 
