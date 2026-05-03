@@ -106,7 +106,7 @@ module.exports = async (req, res) => {
             html: `<div style="font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; max-width: 600px; margin: 0 auto;">
   <h2 style="margin: 0 0 12px;">Welcome - we saved your spot</h2>
   <p style="margin: 0 0 12px;">Thanks for reserving for our ${cohortDateFormatted} cohort (SF). If you didn\'t finish checkout, use this link:</p>
-  <p style="margin: 0 16px 16px;"><a href="https://buy.stripe.com/4gM28qbBJ6522Hk1mmafS07" style="color:#6B46C1;">Complete checkout</a></p>
+  <p style="margin: 0 16px 16px;"><a href="https://buy.x/4gM28qbBJ6522Hk1mmafS07" style="color:#6B46C1;">Complete checkout</a></p>
   <hr style="border:none;border-top:1px solid #eee; margin: 16px 0;">
   <p style="margin:0;color:#555;">$5000 · 3 sessions · small group · real shipping.</p>
 </div>`
